@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Curricular Química y Farmacia</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5fa;
+      color: #333;
+      margin: 0;
+      padding: 1em;
+    }
+    h1 {
+      text-align: center;
+      color: #4a7c59;
+    }
+    .malla {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 1em;
+    }
+    .semestre {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1em;
+      min-width: 220px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .semestre h2 {
+      font-size: 1.2em;
+      text-align: center;
+      color: #4a7c59;
+    }
+    .materia {
+      margin: 0.5em 0;
+      padding: 0.5em;
+      border-radius: 5px;
+      background: #e6f2ec;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .materia.aprobada {
+      background: #b2dfdb;
+      text-decoration: line-through;
+    }
+    .materia.bloqueada {
+      background: #f8d7da;
+      cursor: not-allowed;
+      position: relative;
+    }
+    .materia.bloqueada:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 5px;
+      background: #444;
+      color: #fff;
+      padding: 5px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      white-space: nowrap;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+<h1>Malla Curricular - Química y Farmacia</h1>
+<div class="malla" id="malla"></div>
+
+<script>
+const materias = {
+  "Primer semestre": [
+    { nombre: "Matematica", desbloquea: ["Calculo", "Bioestadistica"] },
+    { nombre: "Quimica General", desbloquea: ["Quimica inorganica", "Bioquimica", "Quimica Organica"] },
+    { nombre: "Biologia Celular e histologia", desbloquea: ["Bioquimica"] },
+    { nombre: "fundamentos de las ciencias farmaceuticas" },
+    { nombre: "introduccion a la farmacia", desbloquea: ["Farmacia privada"] },
+    { nombre: "Electivo de comunicacion" }
+  ],
+  "Segundo semestre": [
+    { nombre: "Calculo", desbloquea: ["Fisica aplicada"] },
+    { nombre: "Quimica inorganica", desbloquea: ["Quimica analitica", "Taller integrado de biociencias"] },
+    { nombre: "Bioquimica", desbloquea: ["Fisiologia Humana", "Microbiologia y parasitologia"] },
+    { nombre: "Evolucion de los medicamentos", desbloquea: ["Taller integrado de biociencias"] },
+    { nombre: "Farmacia privada" },
+    { nombre: "Electivo de comunicacion" }
+  ],
+  // Agregar los demás semestres igual...
+};
+
+const estado = JSON.parse(localStorage.getItem("estadoMalla")) || {};
+
+function renderMalla() {
+  const container = document.getElementById("malla");
+  container.innerHTML = "";
+  const aprobadas = new Set(Object.keys(estado).filter(m => estado[m]));
+
+  const dependencias = {};
+  for (let [semestre, materiasLista] of Object.entries(materias)) {
+    materiasLista.forEach(m => {
+      (m.desbloquea || []).forEach(d => {
+        if (!dependencias[d]) dependencias[d] = [];
+        dependencias[d].push(m.nombre);
+      });
+    });
+  }
+
+  for (let [semestre, materiasLista] of Object.entries(materias)) {
+    const col = document.createElement("div");
+    col.className = "semestre";
+    col.innerHTML = `<h2>${semestre}</h2>`;
+    for (let materia of materiasLista) {
+      const div = document.createElement("div");
+      div.className = "materia";
+      div.textContent = materia.nombre;
+
+      const requisitos = dependencias[materia.nombre] || [];
+      const bloqueada = requisitos.some(req => !aprobadas.has(req));
+      
+      if (estado[materia.nombre]) {
+        div.classList.add("aprobada");
+      } else if (bloqueada) {
+        div.classList.add("bloqueada");
+        div.setAttribute("data-tooltip", "Requiere: " + requisitos.filter(r => !aprobadas.has(r)).join(", "));
+      }
+
+      div.addEventListener("click", () => {
+        if (div.classList.contains("bloqueada")) return;
+        estado[materia.nombre] = !estado[materia.nombre];
+        localStorage.setItem("estadoMalla", JSON.stringify(estado));
+        renderMalla();
+      });
+
+      col.appendChild(div);
+    }
+    container.appendChild(col);
+  }
+}
+
+renderMalla();
+</script>
+</body>
+</html>
