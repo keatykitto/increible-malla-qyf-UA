@@ -89,7 +89,61 @@ const materias = {
     { nombre: "Farmacia privada" },
     { nombre: "Electivo de comunicacion" }
   ],
-  // Agregar los demás semestres igual...
+  "Tercer semestre": [
+    { nombre: "Fisica aplicada", desbloquea: ["Fisicoquimica farmaceutica"] },
+    { nombre: "Quimica analitica", desbloquea: ["Farmacognosia y fitoterapia", "Analisis quimico e instrumental"] },
+    { nombre: "Fisiologia Humana", desbloquea: ["Taller integrado de biociencias", "Farmacologia"] },
+    { nombre: "Bioestadistica", desbloquea: ["Introduccion a la investigacion en ciencias farmaceuticas"] },
+    { nombre: "Legislacion farmaceutica" },
+    { nombre: "Electivo de desarrollo del pensamiento" }
+  ],
+  "Cuarto semestre": [
+    { nombre: "Quimica Organica", desbloquea: ["Fisicoquimica 1", "Fisicoquimica farmaceutica"] },
+    { nombre: "Fisiopatologia", desbloquea: ["Bioquimica clinica"] },
+    { nombre: "Farmacognosia y fitoterapia" },
+    { nombre: "Analisis quimico e instrumental", desbloquea: ["Tecnologia farmaceutica 1"] },
+    { nombre: "Microbiologia y parasitologia", desbloquea: ["Epidemiologia"] },
+    { nombre: "Taller integrado de biociencias" }
+  ],
+  "Quinto semestre": [
+    { nombre: "Farmacologia", desbloquea: ["Farmacologia en sistemas", "Farmacia asistencial"] },
+    { nombre: "Farmacoquimica 1", desbloquea: ["Farmacoquimica 2"] },
+    { nombre: "Fisicoquimica farmaceutica", desbloquea: ["Tecnologia farmaceutica 1"] },
+    { nombre: "Epidemiologia", desbloquea: ["Salud publica"] },
+    { nombre: "Introduccion a la investigacion en ciencias farmaceuticas", desbloquea: ["Metodologia de la investigacion farmaceutica"] },
+    { nombre: "Electivo de desarrollo personal" }
+  ],
+  "Sexto semestre": [
+    { nombre: "Farmacologia de sistemas", desbloquea: ["Practica 1 en oficina de farmacia", "Toxicologia", "Farmacia clinica"] },
+    { nombre: "Farmacoquimica 2", desbloquea: ["Practica 1 en oficina de farmacia"] },
+    { nombre: "Tecnologia farmaceutica 1", desbloquea: ["Tecnologia farmaceutica 2"] },
+    { nombre: "Salud publica", desbloquea: ["Bioquimica clinica", "Farmacia clinica"] },
+    { nombre: "Metodologia de la investigacion farmaceutica", desbloquea: ["Diseño de proyectos en investigacion farmaceutica"] },
+    { nombre: "Electivo de responsabilidad social" }
+  ],
+  "Septimo semestre": [
+    { nombre: "Tecnologia farmaceutica 2", desbloquea: ["Tecnologia cosmetica"] },
+    { nombre: "Bioquimica clinica", desbloquea: ["Toxicologia", "Taller integrado de farmacologia"] },
+    { nombre: "Diseño de proyectos en investigacion farmaceutica", desbloquea: ["Seminario de grado"] },
+    { nombre: "Farmacia asistencial", desbloquea: ["Practica 2: farmacia asistencial"] },
+    { nombre: "Practica 1 en oficina de farmacia", desbloquea: ["Taller integrado de farmacologia"] },
+    { nombre: "Electivo de etica" }
+  ],
+  "Octavo semestre": [
+    { nombre: "Tecnologia medica" },
+    { nombre: "Toxicologia" },
+    { nombre: "Seminario de grado", desbloquea: ["Economia y marketing farmaceutico"] },
+    { nombre: "Farmacia clinica", desbloquea: ["Practica 2: farmacia asistencial", "Farmacovigilancia"] },
+    { nombre: "Taller integrado de farmacologia" }
+  ],
+  "Noveno semestre": [
+    { nombre: "Economia y marketing farmaceutico" },
+    { nombre: "Practica 2: farmacia asistencial", desbloquea: ["Practica 3: Farmacia clinica"] }
+  ],
+  "Decimo semestre": [
+    { nombre: "Farmacovigilancia" },
+    { nombre: "Practica 3: Farmacia clinica" }
+  ]
 };
 
 const estado = JSON.parse(localStorage.getItem("estadoMalla")) || {};
@@ -120,7 +174,7 @@ function renderMalla() {
 
       const requisitos = dependencias[materia.nombre] || [];
       const bloqueada = requisitos.some(req => !aprobadas.has(req));
-      
+
       if (estado[materia.nombre]) {
         div.classList.add("aprobada");
       } else if (bloqueada) {
