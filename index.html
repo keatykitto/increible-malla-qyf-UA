@@ -80,11 +80,80 @@
 
 <script>
 const materias = {
-  // (Tu estructura de materias aquí se mantiene igual)
-  // ...
+  "Primer semestre": [
+    { nombre: "Matematica", desbloquea: ["Calculo", "Bioestadistica"] },
+    { nombre: "Quimica General", desbloquea: ["Quimica inorganica", "Bioquimica", "Quimica Organica"] },
+    { nombre: "Biologia Celular e histologia", desbloquea: ["Bioquimica"] },
+    { nombre: "fundamentos de las ciencias farmaceuticas" },
+    { nombre: "introduccion a la farmacia", desbloquea: ["Farmacia privada"] },
+    { nombre: "Electivo de comunicacion" }
+  ],
+  "Segundo semestre": [
+    { nombre: "Calculo", desbloquea: ["Fisica aplicada"] },
+    { nombre: "Quimica inorganica", desbloquea: ["Quimica analitica", "Taller integrado de biociencias"] },
+    { nombre: "Bioquimica", desbloquea: ["Fisiologia Humana", "Microbiologia y parasitologia"] },
+    { nombre: "Evolucion de los medicamentos", desbloquea: ["Taller integrado de biociencias"] },
+    { nombre: "Farmacia privada" },
+    { nombre: "Electivo de comunicacion" }
+  ],
+  "Tercer semestre": [
+    { nombre: "Fisica aplicada", desbloquea: ["Fisicoquimica farmaceutica"] },
+    { nombre: "Quimica analitica", desbloquea: ["Farmacognosia y fitoterapia", "Analisis quimico e instrumental"] },
+    { nombre: "Fisiologia Humana", desbloquea: ["Fisiopatologia", "Taller integrado de biociencias", "Farmacologia"] },
+    { nombre: "Bioestadistica", desbloquea: ["Introduccion a la investigacion en ciencias farmaceuticas"] },
+    { nombre: "Legislacion farmaceutica" },
+    { nombre: "Electivo de desarrollo del pensamiento" }
+  ],
+  "Cuarto semestre": [
+    { nombre: "Quimica Organica", desbloquea: ["Fisicoquimica 1", "Fisicoquimica farmaceutica"] },
+    { nombre: "Fisiopatologia", desbloquea: ["Bioquimica clinica"] },
+    { nombre: "Farmacognosia y fitoterapia" },
+    { nombre: "Analisis quimico e instrumental", desbloquea: ["Tecnologia farmaceutica 1"] },
+    { nombre: "Microbiologia y parasitologia", desbloquea: ["Epidemiologia"] },
+    { nombre: "Taller integrado de biociencias" }
+  ],
+  "Quinto semestre": [
+    { nombre: "Farmacologia", desbloquea: ["Farmacologia en sistemas", "Farmacia asistencial"] },
+    { nombre: "Farmacoquimica 1", desbloquea: ["Farmacoquimica 2"] },
+    { nombre: "Fisicoquimica farmaceutica", desbloquea: ["Tecnologia farmaceutica 1"] },
+    { nombre: "Epidemiologia", desbloquea: ["Salud publica"] },
+    { nombre: "Introduccion a la investigacion en ciencias farmaceuticas", desbloquea: ["Metodologia de la investigacion farmaceutica"] },
+    { nombre: "Electivo de desarrollo personal" }
+  ],
+  "Sexto semestre": [
+    { nombre: "Farmacologia de sistemas", desbloquea: ["Practica 1 en oficina de farmacia", "Toxicologia", "Farmacia clinica"] },
+    { nombre: "Farmacoquimica 2", desbloquea: ["Practica 1 en oficina de farmacia"] },
+    { nombre: "Tecnologia farmaceutica 1", desbloquea: ["Tecnologia farmaceutica 2"] },
+    { nombre: "Salud publica", desbloquea: ["Bioquimica clinica", "Farmacia clinica"] },
+    { nombre: "Metodologia de la investigacion farmaceutica", desbloquea: ["Diseño de proyectos en investigacion farmaceutica"] },
+    { nombre: "Electivo de responsabilidad social" }
+  ],
+  "Septimo semestre": [
+    { nombre: "Tecnologia farmaceutica 2", desbloquea: ["Tecnologia Cosmetica"] },
+    { nombre: "Bioquimica clinica", desbloquea: ["Toxicologia", "Taller integrado de farmacologia"] },
+    { nombre: "Diseño de proyectos en investigacion farmaceutica", desbloquea: ["Seminario de grado"] },
+    { nombre: "Farmacia asistencial", desbloquea: ["Practica 2: farmacia asistencial"] },
+    { nombre: "Practica 1 en oficina de farmacia", desbloquea: ["Taller integrado de farmacologia"] },
+    { nombre: "Electivo de etica" }
+  ],
+  "Octavo semestre": [
+    { nombre: "Tecnologia Cosmetica" },
+    { nombre: "Toxicologia" },
+    { nombre: "Seminario de grado", desbloquea: ["Economia y marketing farmaceutico"] },
+    { nombre: "Farmacia clinica", desbloquea: ["Practica 2: farmacia asistencial", "Farmacovigilancia"] },
+    { nombre: "Taller integrado de farmacologia" }
+  ],
+  "Noveno semestre": [
+    { nombre: "Economia y marketing farmaceutico" },
+    { nombre: "Practica 2: farmacia asistencial", desbloquea: ["Practica 3: Farmacia clinica"] }
+  ],
+  "Decimo semestre": [
+    { nombre: "Farmacovigilancia" },
+    { nombre: "Practica 3: Farmacia clinica" }
+  ]
 };
 
-const estado = {};
+const estado = JSON.parse(sessionStorage.getItem("estadoMalla")) || {};
 
 function renderMalla() {
   const container = document.getElementById("malla");
@@ -123,6 +192,7 @@ function renderMalla() {
       div.addEventListener("click", () => {
         if (div.classList.contains("bloqueada")) return;
         estado[materia.nombre] = !estado[materia.nombre];
+        sessionStorage.setItem("estadoMalla", JSON.stringify(estado));
         renderMalla();
       });
 
@@ -131,11 +201,6 @@ function renderMalla() {
     container.appendChild(col);
   }
 }
-
-// Elimina progreso al cerrar o recargar la página
-window.addEventListener("beforeunload", () => {
-  localStorage.removeItem("estadoMalla");
-});
 
 renderMalla();
 </script>
